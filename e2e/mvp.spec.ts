@@ -26,25 +26,21 @@ test('register -> mage -> combat -> xp -> relog persistence', async ({ page }, t
   await expect(page.locator('.xp-line')).toContainText('XP 0 / 100');
   await canvas.hover();
   await page.mouse.wheel(0, -1200);
-  await page.waitForTimeout(650);
+  await page.waitForTimeout(250);
   await page.screenshot({ path: '/tmp/worldofchatgpt-character.png', type: 'png' });
 
-  await page.keyboard.down('w');
-  await page.waitForTimeout(700);
-  await page.keyboard.up('w');
   await page.keyboard.press('Tab');
   await expect(page.locator('.target-hud')).toContainText('Training Slime');
 
-  await expect.poll(async () => {
-    const text = await page.locator('.player-hud small').textContent();
-    return Number(text?.match(/^(\d+)/)?.[1] ?? 999);
-  }, { timeout: 7_000 }).toBeLessThan(115);
-
+  // Open at range with the two spells, then step into basic-attack range.
   await page.keyboard.press('2');
   await page.waitForTimeout(80);
   await page.screenshot({ path: testInfo.outputPath('mage-combat.jpg'), type: 'jpeg', quality: 55 });
   await page.keyboard.press('3');
-  await page.waitForTimeout(120);
+  await page.waitForTimeout(80);
+  await page.keyboard.down('w');
+  await page.waitForTimeout(350);
+  await page.keyboard.up('w');
   await page.keyboard.press('1');
 
   await expect(page.locator('.xp-line')).toContainText('XP 25 / 100');
