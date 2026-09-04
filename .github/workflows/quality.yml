@@ -44,9 +44,10 @@ jobs:
     env:
       DATABASE_URL: postgresql://worldofchatgpt:worldofchatgpt@localhost:5432/worldofchatgpt
       JWT_SECRET: e2e-secret-worldofchatgpt-2026
-      CLIENT_ORIGIN: http://localhost:5173
-      VITE_API_URL: http://localhost:3001
-      VITE_WS_URL: ws://localhost:3001/ws
+      PORT: 3101
+      CLIENT_ORIGIN: http://localhost:5174
+      VITE_API_URL: http://localhost:3101
+      VITE_WS_URL: ws://localhost:3101/ws
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -62,7 +63,7 @@ jobs:
       - name: Wait for client and server
         run: |
           for i in {1..60}; do
-            if curl --fail --silent http://localhost:3001/health >/dev/null && curl --fail --silent http://localhost:5173 >/dev/null; then
+            if curl --fail --silent http://localhost:3101/health >/dev/null && curl --fail --silent http://localhost:5174 >/dev/null; then
               exit 0
             fi
             sleep 1
