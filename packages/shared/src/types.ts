@@ -15,6 +15,18 @@ export interface CharacterSummary {
   xp: number;
 }
 
+export interface VisualEquipment {
+  head: string | null;
+  shoulders: string | null;
+  chest: string | null;
+  hands: string | null;
+  legs: string | null;
+  feet: string | null;
+  accessory: string | null;
+  weapon: string | null;
+  offhand: string | null;
+}
+
 export interface PlayerSnapshot extends CharacterSummary {
   entityId: EntityId;
   position: Vec3;
@@ -22,6 +34,7 @@ export interface PlayerSnapshot extends CharacterSummary {
   hp: number;
   maxHp: number;
   dead: boolean;
+  equipment: VisualEquipment;
 }
 
 export interface MonsterSnapshot {
