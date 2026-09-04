@@ -7,4 +7,11 @@ export default tseslint.config(
   {
     ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**'],
   },
+  {
+    files: ['apps/client/src/game/engine/GameEngine.ts'],
+    rules: {
+      // Animation pose variables intentionally stay mutable as action states grow.
+      'prefer-const': 'off',
+    },
+  },
 );
