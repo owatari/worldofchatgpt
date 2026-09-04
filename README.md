@@ -22,28 +22,36 @@ docker compose up -d
 pnpm dev
 ```
 
-Open `http://localhost:5173`.
+Open `http://localhost:5174`.
 
 `pnpm dev` builds the shared packages first, then starts the Fastify server and Vite client together. The server applies Drizzle SQL migrations automatically during startup.
+
+## Local ports
+
+The development defaults are intentionally isolated from common 3000-3003 app ports:
+
+- Client: `5174`
+- API/WebSocket server: `3101`
+- PostgreSQL host port: `5433` (`5432` inside the container)
 
 ## Environment
 
 Copy `.env.example` to `.env` for local development.
 
 ```env
-DATABASE_URL=postgresql://worldofchatgpt:worldofchatgpt@localhost:5432/worldofchatgpt
+DATABASE_URL=postgresql://worldofchatgpt:worldofchatgpt@localhost:5433/worldofchatgpt
 JWT_SECRET=replace-with-a-long-random-secret
-PORT=3001
-CLIENT_ORIGIN=http://localhost:5173
-VITE_API_URL=http://localhost:3001
-VITE_WS_URL=ws://localhost:3001/ws
+PORT=3101
+CLIENT_ORIGIN=http://localhost:5174
+VITE_API_URL=http://localhost:3101
+VITE_WS_URL=ws://localhost:3101/ws
 ```
 
 Do not commit real secrets. In production, use HTTPS/WSS and a strong JWT secret.
 
 ## Database
 
-PostgreSQL runs from `docker-compose.yml` on port `5432`.
+PostgreSQL runs from `docker-compose.yml` and is exposed on host port `5433`, while PostgreSQL remains on port `5432` inside the container.
 
 Persistence currently stores:
 
