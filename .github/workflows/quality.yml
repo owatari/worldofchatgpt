@@ -78,5 +78,6 @@ jobs:
           name: browser-evidence
           path: |
             test-results/
+            /tmp/worldofchatgpt-character.png
             /tmp/worldofchatgpt.log
           if-no-files-found: ignore
