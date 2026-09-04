@@ -1,8 +1,8 @@
 import WebSocket from 'ws';
 import { eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
-import type { ClassId, ClientMessage, CombatEvent, MonsterSnapshot, PlayerSnapshot, ServerMessage, Vec3 } from '@worldofchatgpt/shared';
-import { clientMessageSchema } from '@worldofchatgpt/shared';
+import type { ClassId, ClientMessage, CombatEvent, MonsterSnapshot, PlayerSnapshot, ServerMessage, Vec3, VisualEquipment } from '@worldofchatgpt/shared';
+import { STARTER_VISUAL_EQUIPMENT, clientMessageSchema } from '@worldofchatgpt/shared';
 import {
   TRAINING_SLIME,
   applyDamage,
@@ -46,6 +46,7 @@ interface RuntimePlayer {
   inputZ: number;
   targetId: string | null;
   cooldowns: Map<string, number>;
+  equipment: VisualEquipment;
 }
 
 interface RuntimeSlime {
@@ -129,6 +130,7 @@ export class GameWorld {
         inputZ: 0,
         targetId: null,
         cooldowns: new Map(),
+        equipment: { ...STARTER_VISUAL_EQUIPMENT[classId] },
       };
       this.players.set(entityId, player);
       this.send(player, this.welcomeMessage(player));
@@ -328,6 +330,7 @@ export class GameWorld {
       hp: player.hp,
       maxHp: player.stats.maxHp,
       dead: player.dead,
+      equipment: { ...player.equipment },
     };
   }
 
