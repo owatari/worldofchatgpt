@@ -21,9 +21,12 @@ test('register -> mage -> combat -> xp -> relog persistence', async ({ page }, t
   await page.getByRole('button', { name: 'Begin as Mage' }).click();
 
   await expect(page.locator('.connection')).toContainText('Connected');
-  await expect(page.locator('.game-canvas canvas')).toBeVisible();
+  const canvas = page.locator('.game-canvas canvas');
+  await expect(canvas).toBeVisible();
   await expect(page.locator('.xp-line')).toContainText('XP 0 / 100');
-  await page.waitForTimeout(500);
+  await canvas.hover();
+  await page.mouse.wheel(0, -1200);
+  await page.waitForTimeout(650);
   await page.screenshot({ path: '/tmp/worldofchatgpt-character.png', type: 'png' });
 
   await page.keyboard.down('w');
