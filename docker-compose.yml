@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: worldofchatgpt
       POSTGRES_DB: worldofchatgpt
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - worldofchatgpt_pg:/var/lib/postgresql/data
     healthcheck:
