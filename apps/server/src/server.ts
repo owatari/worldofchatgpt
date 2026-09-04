@@ -9,20 +9,12 @@ import { GameWorld } from './game/world.js';
 
 export const buildServer = async () => {
   const app = Fastify({
-    logger: {
-      serializers: {
-        req(request) {
-          return {
-            method: request.method,
-            url: request.url.split('?')[0],
-            host: request.headers.host,
-            remoteAddress: request.socket.remoteAddress,
-            remotePort: request.socket.remotePort,
-          };
-        },
-      },
-      redact: ['req.headers.authorization'],
-    },
+    logger: true,
+    // WebSocket auth uses a query token because browsers cannot attach a custom
+    // Authorization header to the upgrade request. Disable Fastify's automatic
+    // request logging so authenticated URLs and API Authorization headers are
+    // never written to logs.
+    disableRequestLogging: true,
   });
   await app.register(cors, { origin: config.CLIENT_ORIGIN });
   await app.register(jwt, { secret: config.JWT_SECRET });
