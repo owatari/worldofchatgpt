@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.15.0",
   "scripts": {
+    "predev": "pnpm --filter @worldofchatgpt/shared build && pnpm --filter @worldofchatgpt/game-core build",
     "dev": "concurrently -n server,client -c auto \"pnpm --filter @worldofchatgpt/server dev\" \"pnpm --filter @worldofchatgpt/client dev\"",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
@@ -11,6 +12,7 @@
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
+    "@eslint/js": "^9.35.0",
     "concurrently": "^9.2.1",
     "eslint": "^9.35.0",
     "typescript": "^5.9.2",
