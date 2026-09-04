@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { LogController } from 'fastify';
 import cors from '@fastify/cors';
 import jwt from '@fastify/jwt';
 import websocket from '@fastify/websocket';
@@ -11,10 +11,10 @@ export const buildServer = async () => {
   const app = Fastify({
     logger: true,
     // WebSocket auth uses a query token because browsers cannot attach a custom
-    // Authorization header to the upgrade request. Disable Fastify's automatic
-    // request logging so authenticated URLs and API Authorization headers are
-    // never written to logs.
-    disableRequestLogging: true,
+    // Authorization header to the upgrade request. Suppress Fastify's automatic
+    // request logs so authenticated URLs and API Authorization headers are never
+    // written to logs.
+    logController: new LogController({ disableRequestLogging: true }),
   });
   await app.register(cors, { origin: config.CLIENT_ORIGIN });
   await app.register(jwt, { secret: config.JWT_SECRET });
