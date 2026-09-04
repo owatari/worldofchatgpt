@@ -34,7 +34,8 @@ export interface PlayerSnapshot extends CharacterSummary {
   hp: number;
   maxHp: number;
   dead: boolean;
-  equipment: VisualEquipment;
+  /** Optional until the inventory/equipment service becomes authoritative. */
+  equipment?: VisualEquipment;
 }
 
 export interface MonsterSnapshot {
