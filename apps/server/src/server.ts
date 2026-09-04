@@ -8,7 +8,22 @@ import { registerCharacterRoutes } from './routes/character.js';
 import { GameWorld } from './game/world.js';
 
 export const buildServer = async () => {
-  const app = Fastify({ logger: true });
+  const app = Fastify({
+    logger: {
+      serializers: {
+        req(request) {
+          return {
+            method: request.method,
+            url: request.url.split('?')[0],
+            host: request.headers.host,
+            remoteAddress: request.socket.remoteAddress,
+            remotePort: request.socket.remotePort,
+          };
+        },
+      },
+      redact: ['req.headers.authorization'],
+    },
+  });
   await app.register(cors, { origin: config.CLIENT_ORIGIN });
   await app.register(jwt, { secret: config.JWT_SECRET });
   await app.register(websocket);
