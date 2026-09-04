@@ -1,4 +1,8 @@
+import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
 import { z } from 'zod';
+
+dotenv.config({ path: fileURLToPath(new URL('../../../.env', import.meta.url)), quiet: true });
 
 const configSchema = z.object({
   DATABASE_URL: z.string().min(1).default('postgresql://worldofchatgpt:worldofchatgpt@localhost:5432/worldofchatgpt'),

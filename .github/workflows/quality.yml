@@ -22,3 +22,60 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm lint
+
+  e2e:
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: worldofchatgpt
+          POSTGRES_PASSWORD: worldofchatgpt
+          POSTGRES_DB: worldofchatgpt
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U worldofchatgpt -d worldofchatgpt"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://worldofchatgpt:worldofchatgpt@localhost:5432/worldofchatgpt
+      JWT_SECRET: e2e-secret-worldofchatgpt-2026
+      CLIENT_ORIGIN: http://localhost:5173
+      VITE_API_URL: http://localhost:3001
+      VITE_WS_URL: ws://localhost:3001/ws
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start MVP
+        run: pnpm dev > /tmp/worldofchatgpt.log 2>&1 &
+      - name: Wait for client and server
+        run: |
+          for i in {1..60}; do
+            if curl --fail --silent http://localhost:3001/health >/dev/null && curl --fail --silent http://localhost:5173 >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/worldofchatgpt.log
+          exit 1
+      - run: pnpm e2e
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-evidence
+          path: |
+            test-results/
+            /tmp/worldofchatgpt.log
+          if-no-files-found: ignore
