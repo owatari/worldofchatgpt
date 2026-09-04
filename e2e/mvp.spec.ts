@@ -17,7 +17,7 @@ test('register -> mage -> combat -> xp -> relog persistence', async ({ page }, t
 
   await expect(page.getByRole('heading', { name: 'Create Character' })).toBeVisible();
   await page.getByLabel('Character Name').fill(characterName);
-  await page.locator('.class-card').filter({ hasText: 'Mage' }).click();
+  await page.locator('.class-card').nth(1).click();
   await page.getByRole('button', { name: 'Begin as Mage' }).click();
 
   await expect(page.locator('.connection')).toContainText('Connected');
